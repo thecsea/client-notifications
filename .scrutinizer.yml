@@ -1,0 +1,21 @@
+checks:
+    php:
+        code_rating: true
+        duplication: true
+build:
+    environment:
+        php: '5.5.0'
+    dependencies:
+        before:
+            - mysql -uroot -e "create database IF NOT EXISTS client_notifications;"
+            - mysql -uroot -e "CREATE USER 'client_notifications'@'localhost' IDENTIFIED BY 'zhhnqBF26wtnUnP9';"
+            - mysql -uroot -e "GRANT ALL ON client_notifications.* TO 'client_notifications'@'localhost';"
+            - mysql -uroot client_notifications < tests/clientNotifications.sql
+    tests:
+        override:
+            -
+                command: 'phpunit'
+                coverage:
+                    file: 'coverage.xml'
+                    format: 'php-clover'
+
