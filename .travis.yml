@@ -19,10 +19,10 @@ env:
 before_script:
   - composer self-update
   - composer install --prefer-source --no-interaction
-  - if [[ "$DB" == "mysql" ]]; then mysql -e "create database IF NOT EXISTS client_notifications;" -uroot; fi
-  - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE USER 'client_notifications'@'localhost' IDENTIFIED BY 'zhhnqBF26wtnUnP9';" -uroot; fi
-  - if [[ "$DB" == "mysql" ]]; then mysql -e "GRANT ALL ON client_notifications.* TO 'client_notifications'@'localhost';" -uroot; fi
-  - if [[ "$DB" == "mysql" ]]; then mysql -uroot client_notifications < tests/clientNotifications.sql; fi
+  - if [[ "$DB" == "mysql" ]]; then mysql -e "create database IF NOT EXISTS client_not;" -uroot; fi
+  - if [[ "$DB" == "mysql" ]]; then mysql -e "CREATE USER 'client_not'@'localhost' IDENTIFIED BY 'zhhnqBF26wtnUnP9';" -uroot; fi
+  - if [[ "$DB" == "mysql" ]]; then mysql -e "GRANT ALL ON client_not.* TO 'client_not'@'localhost';" -uroot; fi
+  - if [[ "$DB" == "mysql" ]]; then mysql -uroot client_not < tests/clientNotifications.sql; fi
 
 # Commands you want to run that will verify your build.
 script: phpunit

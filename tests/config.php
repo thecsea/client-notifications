@@ -19,9 +19,9 @@
 
 return array(
     'host' => 'localhost',
-    'user' => 'client_notifications',
+    'user' => 'client_not',
     'psw' => 'zhhnqBF26wtnUnP9',
-    'db' => 'client_notifications',
+    'db' => 'client_not',
     'tables' => array(
         'notifications' => 'notifications',
     ),
