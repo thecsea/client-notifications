@@ -18,7 +18,6 @@
  */
 
 namespace it\thecsea\client_notifications;
-use it\thecsea\client_notifications\ClientNotification;
 
 /**
  * A class that groups pieces of information and procedures to send a notification using a medium that is the email
@@ -60,7 +59,7 @@ class MailMedium extends NotificationMedium
         if($this->checkMailValidity($mailAddress) && $this->checkMailValidity($from)){
             throw new NonValidArgumentException('The given mail is not valid');
         }
-        $this->mailAddress = $mail;
+        $this->mailAddress = $mailAddress;
         $this->mailer = new \PHPMailer();
         $this->mailer->isSMTP();
         $this->mailer->Host = $mail_host;
@@ -83,7 +82,7 @@ class MailMedium extends NotificationMedium
         }
 
         $this->mailer->setFrom($from);
-        $this->mailer->addAddress($mail);
+        $this->mailer->addAddress($mailAddress);
         $this->mailer->Subject = $subject;
 
     }

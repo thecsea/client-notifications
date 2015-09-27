@@ -85,7 +85,7 @@ class NotificationManager
      *
      * @param ClientNotification $notification A notification to be sent to the client
      * @throws DatabaseException If an error occured in the storing of the notification in the db
-     * @throws WrongTypeException If the sending vehicles specified in the notification are not valid
+     * @throws NonValidArgumentException If the sending vehicles specified in the notification are not valid
      */
     public function send(ClientNotification $notification){
         $mediums = $notification->getNotificationVehicles();
@@ -98,11 +98,11 @@ class NotificationManager
             foreach($mediums as $medium){
                 //Checks if $vehicles does not contain array but objects of the type NotificationVehicle
                 if(!is_array($medium) && ($medium instanceof NotificationMedium)){
-                    $medium->send($notification);
+                    $medium->sendProcedure($notification);
                     $this->store($notification);
                 }
                 else{
-                    throw new WrongTypeException('No valid vehicle for the notification has been defined');
+                    throw new NonValidArgumentException('No valid medium for the notification has been defined');
                 }
 
             }
@@ -115,6 +115,6 @@ class NotificationManager
      * @return string the escaped string
      */
     private function getEscapedString($string){
-        return mysqli_real_escape_string($string);
+        return mysqli::real_escape_string ($string);
     }
 }
