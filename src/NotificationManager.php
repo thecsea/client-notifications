@@ -93,7 +93,7 @@ class NotificationManager
      */
     public function getDbConnection()
     {
-        //DON'T clone
+        //DON'T clone to keep mysql connection number efficiently
         return $this->dbConnection;
     }
 
