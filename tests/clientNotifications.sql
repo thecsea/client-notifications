@@ -10,10 +10,10 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS `notifications` (
-  `id` int(11) NOT NULL,
+  `id` int(12) NOT NULL,
   `user_id` int (11) NOT NULL,
   `message` text NOT NULL,
-  `type` varchar(50) NOT NULL,
+  `type` varchar(255) NOT NULL,
   `date` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
