@@ -62,7 +62,7 @@ class NotificationManager
      * Constructs a notification manager that manages the sending and storing of notifications.
      * This manager is constructed from pieces of information relative to the db used to store the notifications
      *
-     * @param Mysqltcs $connection The mysqltcs connection,it can be a connection used in other classes
+     * @param Mysqltcs $connection The mysqltcs connection, it can be a connection used in other classes
      * @param string $notificationsTable
      * @param string $notificationTypeTable
      * @param string $typesTable
@@ -80,6 +80,13 @@ class NotificationManager
         //this means that $notificationsTable is the default table, if from parameter is not set
         $this->dbOperations = new MysqltcsOperations($this->dbConnection, $notificationsTable);
     }
+
+
+    public function __clone()
+    {
+        $this->dbOperations = clone $this->dbOperations;
+    }
+
 
     /**
      * @return Mysqltcs
