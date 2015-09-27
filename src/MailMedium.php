@@ -52,9 +52,9 @@ class MailMedium extends NotificationMedium
      * @param int $port The port used to send the email
      * @param string $subject The subject of the email
      * @param string $from The sender's email address
-     * @throws NonValidArgumentException If the provided email adress are not valid or the mail encryption technology
+     * @throws NonValidArgumentException If the provided email address are not valid or the mail encryption technology
      * indicated is not supported or doesn't exist
-     * @throws \phpmailerException If an error occured in the sending of the email
+     * @throws \phpmailerException If an error occurred in the sending of the email
      */
     public function __construct($mailAddress,$mail_host,$smtp_auth,$username, $pwd, $encryption_type='',$port, $subject,$from)
     {

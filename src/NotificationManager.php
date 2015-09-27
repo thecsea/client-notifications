@@ -76,7 +76,7 @@ class NotificationManager
         }
         catch(MysqltcsException $e)
         {
-            throw new DatabaseException('An error occured in the insertion of the data in the database');
+            throw new DatabaseException('An error occurred in the insertion of the data in the database');
         }
 
     }
@@ -86,7 +86,7 @@ class NotificationManager
      * the notification itself
      *
      * @param ClientNotification $notification A notification to be sent to the client
-     * @throws DatabaseException If an error occured in the storing of the notification in the db
+     * @throws DatabaseException If an error occurred in the storing of the notification in the db
      * @throws NonValidArgumentException If the sending vehicles specified in the notification are not valid
      */
     public function send(ClientNotification $notification){
