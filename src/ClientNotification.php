@@ -18,6 +18,7 @@
  */
 
 namespace it\thecsea\client_notifications;
+use it\thecsea\client_notifications\exceptions\NonValidArgumentException;
 
 /**
  * A class that represents a notification

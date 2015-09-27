@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-namespace it\thecsea\client_notifications;
+namespace it\thecsea\client_notifications\exceptions;
 
 /**
  * An exception that indicates a non valid argument for a method

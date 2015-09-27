@@ -17,7 +17,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  */
 
-namespace it\thecsea\client_notifications;
+namespace it\thecsea\client_notifications\exceptions;
 
 /**
  * A general exception in the namespace

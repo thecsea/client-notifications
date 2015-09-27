@@ -18,6 +18,8 @@
  */
 
 namespace it\thecsea\client_notifications;
+use it\thecsea\client_notifications\exceptions\FailedMailNotificationSendingException;
+use it\thecsea\client_notifications\exceptions\NonValidArgumentException;
 
 /**
  * A class that groups pieces of information and procedures to send a notification using a medium that is the email

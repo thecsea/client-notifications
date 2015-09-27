@@ -18,6 +18,8 @@
  */
 
 namespace it\thecsea\client_notifications;
+use it\thecsea\client_notifications\exceptions\DatabaseException;
+use it\thecsea\client_notifications\exceptions\NonValidArgumentException;
 use it\thecsea\mysqltcs\Mysqltcs;
 use it\thecsea\mysqltcs\MysqltcsException;
 use it\thecsea\mysqltcs\MysqltcsOperations;
@@ -115,6 +117,6 @@ class NotificationManager
      * @return string the escaped string
      */
     private function getEscapedString($string){
-        return mysqli::real_escape_string ($string);
+        return $this->dbOperations->getEscapedString($string);
     }
 }
