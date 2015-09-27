@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Giorgio Pea <annatar93@gmail.com>
  * Date: 27/09/15
- * Time: 15:52
+ * Time: 16:01
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
@@ -19,8 +19,15 @@
 
 namespace it\thecsea\client_notifications;
 
-
-class WrongTypeException extends ClientNotificationException
+/**
+ * A general exception in the namespace
+ *
+ * @package it\thecsea\client_notifications
+ * @author Giorgio Pea <annatar93@gmail.com>
+ * @copyright 2015 Giorgio Pea
+ * @version 1.0.0
+ */
+class ClientNotificationException extends \Exception
 {
 
 }

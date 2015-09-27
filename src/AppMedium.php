@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Giorgio Pea <annatar93@gmail.com>
  * Date: 27/09/15
- * Time: 14:15
+ * Time: 14:17
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
@@ -18,23 +18,17 @@
  */
 
 namespace it\thecsea\client_notifications;
-use it\thecsea\client_notifications\NotificationVehicle;
 
-
-class SmsVehicle extends NotificationVehicle
+/**
+ * A class that groups pieces of information and procedures to send an in-app notification
+ * @package it\thecsea\client_notifications
+ * @author Giorgio Pea <annatar93@gmail.com>
+ * @copyright 2015 Giorgio Pea
+ * @version 1.0.0
+ */
+class AppMedium extends NotificationMedium
 {
-
-    private $phoneNumber;
-    /**
-     * SmsVehicle constructor.
-     */
-    public function __construct($phoneNumber)
-    {
-        $this->phoneNumber = $phoneNumber;
-    }
-
     public function sendProcedure(ClientNotification $notification){
         //
     }
-
 }

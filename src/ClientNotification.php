@@ -20,7 +20,8 @@
 namespace it\thecsea\client_notifications;
 
 /**
- * Class ClientNotifications
+ * A class that represents a notification
+ *
  * @package it\thecsea\client_notifications
  * @author Giorgio Pea <annatar93@gmail.com>
  * @copyright 2015 Giorgio Pea
@@ -28,26 +29,46 @@ namespace it\thecsea\client_notifications;
  */
 class ClientNotification
 {
+    /**
+     * @var string
+     */
     private $message;
+    /**
+     * @var int
+     */
     private $timestamp;
+    /**
+     * @var int
+     */
     private $userId;
+    /**
+     * @var NotificationMedium[]
+     */
     private $notificationVehicles;
 
 
-
+    /**
+     * Checks if a given integer is a non negative, non zero
+     * integer
+     * @param int $userId The integer to be tested
+     * @return bool The result of the test
+     */
     public static function checkUserIdValidity($userId){
-        if(is_int($userId)){
-            if($userId > 0){
-                return true;
-            }
-            return false;
+
+        if($userId > 0){
+            return true;
         }
         return false;
     }
 
     /**
-     * ClientNotification constructor.
-     * @param $message
+     * Constructs a notification from its encapsulated message, the user it refers to and from the
+     * vehicles to be used to send it
+     *
+     * @param string $message The message encapsulated in the notification
+     * @param int $userId The id of the user the notification refers to
+     * @param NotificationMedium[] $notificationVehicles An array of NotificationVehicle objects
+     * @throws NonValidArgumentException If the provided user id is a negative or a zero value integer
      */
     public function __construct($message, $userId, $notificationVehicles)
     {
@@ -61,22 +82,46 @@ class ClientNotification
     }
 
     /**
-     * @return mixed
+     * @param string $message
+     */
+    public function setMessage($message)
+    {
+        $this->message = $message;
+    }
+
+    /**
+     * @param int $timestamp
+     */
+    public function setTimestamp($timestamp)
+    {
+        $this->timestamp = $timestamp;
+    }
+
+    /**
+     * @param int $userId
+     */
+    public function setUserId($userId)
+    {
+        $this->userId = $userId;
+    }
+
+    /**
+     * @param NotificationMedium[] $notificationVehicles
+     */
+    public function setNotificationVehicles($notificationVehicles)
+    {
+        $this->notificationVehicles = $notificationVehicles;
+    }
+
+    /**
+     * @return NotificationMedium[]
      */
     public function getNotificationVehicles()
     {
         return $this->notificationVehicles;
     }
     /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @return mixed
+     * @return string
      */
     public function getMessage()
     {
@@ -84,7 +129,7 @@ class ClientNotification
     }
 
     /**
-     * @return array
+     * @return int
      */
     public function getTimestamp()
     {
@@ -92,7 +137,7 @@ class ClientNotification
     }
 
     /**
-     * @return mixed
+     * @return int
      */
     public function getUserId()
     {
