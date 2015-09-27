@@ -24,5 +24,7 @@ return array(
     'db' => 'client_not',
     'tables' => array(
         'notifications' => 'notifications',
+        'notification_type' => 'notification_type',
+        'types' => 'types',
     ),
 );

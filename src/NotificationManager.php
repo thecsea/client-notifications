@@ -44,20 +44,124 @@ class NotificationManager
     private $dbOperations;
 
     /**
+     * @var string
+     */
+    private $notificationsTable;
+
+    /**
+     * @var string
+     */
+    private $notificationTypeTable;
+
+    /**
+     * @var string
+     */
+    private $typesTable;
+
+    /**
      * Constructs a notification manager that manages the sending and storing of notifications.
      * This manager is constructed from pieces of information relative to the db used to store the notifications
      *
-     * @param string $dbHost The db host
-     * @param string $dbUser The db username
-     * @param string $dbPwd The password relative to the specified db username
-     * @param string $dbName The name of the db
+     * @param Mysqltcs $connection The mysqltcs connection,it can be a connection used in other classes
+     * @param string $notificationsTable
+     * @param string $notificationTypeTable
+     * @param string $typesTable
      */
-    public function __construct($dbHost,$dbUser,$dbPwd,$dbName)
+    public function __construct(Mysqltcs $connection, $notificationsTable, $notificationTypeTable, $typesTable)
     {
-        $this->dbConnection = new Mysqltcs($dbHost,$dbUser,$dbPwd,$dbName);
-        $this->dbOperations = new MysqltcsOperations($this->dbConnection);
+        $this->dbConnection = $connection;
+        $notificationsTable = $connection->getEscapedString($notificationsTable);
+        $this->notificationsTable = $notificationsTable;
+        $notificationTypeTable = $connection->getEscapedString($notificationTypeTable);
+        $this->notificationTypeTable = $notificationTypeTable;
+        $typesTable = $connection->getEscapedString($typesTable);
+        $this->typesTable = $typesTable;
 
+        //this means that $notificationsTable is the default table, if from parameter is not set
+        $this->dbOperations = new MysqltcsOperations($this->dbConnection, $notificationsTable);
     }
+
+    /**
+     * @return Mysqltcs
+     */
+    public function getDbConnection()
+    {
+        //DON'T clone
+        return $this->dbConnection;
+    }
+
+    /**
+     * @param Mysqltcs $dbConnection
+     */
+    public function setDbConnection(Mysqltcs $dbConnection)
+    {
+        $this->dbConnection = $dbConnection;
+        $this->dbOperations->setMysqltcs($dbConnection);
+    }
+
+    /**
+     * @return MysqltcsOperations
+     */
+    public function getDbOperations()
+    {
+        //clone to avoid to modify original operations
+        $operations = clone $this->dbOperations;
+        return $operations;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotificationsTable()
+    {
+        return $this->notificationsTable;
+    }
+
+    /**
+     * @param string $notificationsTable
+     */
+    public function setNotificationsTable($notificationsTable)
+    {
+        $notificationsTable = $this->dbConnection->getEscapedString($notificationsTable);
+        $this->notificationsTable = $notificationsTable;
+        $this->dbOperations->setDefaultFrom($notificationsTable);
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotificationTypeTable()
+    {
+        return $this->notificationTypeTable;
+    }
+
+    /**
+     * @param string $notificationTypeTable
+     */
+    public function setNotificationTypeTable($notificationTypeTable)
+    {
+        $notificationTypeTable = $this->dbConnection->getEscapedString($notificationTypeTable);
+        $this->notificationTypeTable = $notificationTypeTable;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTypesTable()
+    {
+        return $this->typesTable;
+    }
+
+    /**
+     * @param string $typesTable
+     */
+    public function setTypesTable($typesTable)
+    {
+        $typesTable = $this->dbConnection->getEscapedString($typesTable);
+        $this->typesTable = $typesTable;
+    }
+
+
 
     /**
      * Stores a given notification in the provided db
