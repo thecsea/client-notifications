@@ -79,6 +79,8 @@ class NotificationManager
 
         //this means that $notificationsTable is the default table, if from parameter is not set
         $this->dbOperations = new MysqltcsOperations($this->dbConnection, $notificationsTable);
+
+        //TODO check here and in setter if tables exist
     }
 
 
