@@ -201,9 +201,11 @@ class NotificationManager
      * @throws NonValidArgumentException If the sending vehicles specified in the notification are not valid
      */
     public function send(ClientNotification $notification){
+        /** @var NotificationMedium[] $mediums */
         $mediums = $notification->getNotificationVehicles();
         //Checks if $vehicles is an object of the type NotificationVehicle
         if(!is_array($mediums) && $mediums instanceof NotificationMedium){
+            /** @var NotificationMedium $mediums */
             $mediums->sendProcedure($notification);
             $this->store($notification);
         }
@@ -220,6 +222,8 @@ class NotificationManager
 
             }
         }
+
+        //TODO case medium is not array nor instanceof NotificationMedium
     }
 
     /**
