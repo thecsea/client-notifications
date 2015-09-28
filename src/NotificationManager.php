@@ -218,7 +218,7 @@ class NotificationManager
         /** @var NotificationMedium[] $mediums */
         $mediums = $notification->getNotificationMediums();
         //Checks if $vehicles is an object of the type NotificationVehicle
-        if(!is_array($mediums) && $mediums instanceof NotificationMedium){
+        if($mediums instanceof NotificationMedium){
             /** @var NotificationMedium $mediums */
             $mediums->sendProcedure($notification);
             $this->store($notification);
@@ -226,7 +226,7 @@ class NotificationManager
         else if(is_array($mediums)){
             foreach($mediums as $medium){
                 //Checks if $vehicles does not contain array but objects of the type NotificationVehicle
-                if(!is_array($medium) && ($medium instanceof NotificationMedium)){
+                if($medium instanceof NotificationMedium){
                     $medium->sendProcedure($notification);
                     $this->store($notification);
                 }

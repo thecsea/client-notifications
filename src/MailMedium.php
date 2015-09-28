@@ -58,9 +58,8 @@ class MailMedium extends NotificationMedium
      */
     public function __construct($mailAddress,$mail_host,$smtp_auth,$username, $pwd, $encryption_type='',$port, $subject,$from)
     {
-        if($this->checkMailValidity($mailAddress) && $this->checkMailValidity($from)){
-            throw new NonValidArgumentException('The given mail is not valid');
-        }
+        self::checkMailValidity($mailAddress);
+        self::checkMailValidity($from);
         $this->mailAddress = $mailAddress;
         $this->mailer = new \PHPMailer();
         $this->mailer->isSMTP();
@@ -68,21 +67,10 @@ class MailMedium extends NotificationMedium
         $this->mailer->SMTPAuth = $smtp_auth;
         $this->mailer->Username = $username;
         $this->mailer->Password = $pwd;
-        if($encryption_type != ''){
-            if($encryption_type == 'tls' || $encryption_type == 'ssl'){
-                $this->mailer->SMTPSecure = $encryption_type;
-            }
-            else{
-                throw new NonValidArgumentException('Non valid mail encryption technology, use only ssl or tls');
-            }
-        }
-        if($port > 0 && $port < 65536){
-            $this->mailer->Port = $port;
-        }
-        else{
-            throw new NonValidArgumentException('Tcp/Udp ports are in the range 0 - 65536');
-        }
-
+        self::encryptionTypeControl($encryption_type);
+        $this->mailer->SMTPSecure = $encryption_type;
+        self::portControl($port);
+        $this->mailer->Port = $port;
         $this->mailer->setFrom($from);
         $this->mailer->addAddress($mailAddress);
         $this->mailer->Subject = $subject;
@@ -94,6 +82,7 @@ class MailMedium extends NotificationMedium
      */
     public function setMailAddress($mailAddress){
         $this->mailer->clearAllRecipients();
+        self::checkMailValidity($mailAddress);
         $this->mailer->addAddress($mailAddress);
     }
 
@@ -131,13 +120,8 @@ class MailMedium extends NotificationMedium
      * indicated is not supported or does not exist
      */
     public function setEncryption($enc){
-        if($enc == 'tls' || $enc == 'ssl'){
-            $this->mailer->SMTPSecure = $enc;
-        }
-        else{
-            throw new NonValidArgumentException('Non valid mail encryption technology, use only ssl or tls');
-        }
-
+        $this->encryptionTypeControl($enc);
+        $this->mailer->SMTPSecure = $enc;
     }
 
     /**
@@ -152,6 +136,7 @@ class MailMedium extends NotificationMedium
      * @throws \phpmailerException If an error occured in the setting of the sender's mail address
      */
     public function setFrom($from){
+        self::checkMailValidity($from);
         $this->mailer->setFrom($from);
     }
 
@@ -160,12 +145,7 @@ class MailMedium extends NotificationMedium
      * @throws NonValidArgumentException If the given port number is not valid
      */
     public function setPort($port){
-        if($port > 0 && $port < 65536){
-            $this->mailer->Port = $port;
-        }
-        else{
-            throw new NonValidArgumentException('Tcp/Udp ports are in the range 0 - 65536');
-        }
+       self::portControl($port);
     }
 
     /**
@@ -184,9 +164,33 @@ class MailMedium extends NotificationMedium
     /**
      * Checks if a given string represents a valid email address
      * @param string $mail The string to be tested
-     * @return bool The result of the test
+     * @@throws NonValidArgumentException If the given email address is not valid
      */
     public static function checkMailValidity($mail){
-        return filter_var($mail, FILTER_VALIDATE_EMAIL);
+        if(!filter_var($mail, FILTER_VALIDATE_EMAIL)){
+            throw new NonValidArgumentException('The given mail is not valid');
+        }
+    }
+
+    /**
+     * Checks if a given string represents a valid mail encryption technology (only ssl/tls are supported)
+     * @param string $enc The string that is tested to represent a valid mail encryption technology
+     * @throws NonValidArgumentException If the given string does not represent a valid mail encryption technology
+     */
+    public static function encryptionTypeControl($enc){
+        if(!($enc == 'tls' || $enc == 'ssl' || $enc == '')){
+            throw new NonValidArgumentException('Non valid mail encryption technology, use only ssl or tls');
+        }
+    }
+
+    /**
+     * Checks if a given integer represents a valid tcp/udp port
+     * @param int $port The integer that is tested to be a valid tcp/udp port
+     * @throws NonValidArgumentException If the given integer is not a valid tcp/udp port
+     */
+    public static function portControl($port){
+        if(!($port > 0 && $port < 65536)){
+            throw new NonValidArgumentException('Tcp/Udp ports are in the range 0 - 65536');
+        }
     }
 }
