@@ -20,6 +20,7 @@
 namespace it\thecsea\client_notifications;
 use it\thecsea\client_notifications\exceptions\DatabaseException;
 use it\thecsea\client_notifications\exceptions\NonValidArgumentException;
+use it\thecsea\client_notifications\exceptions\NotContainedValueException;
 use it\thecsea\mysqltcs\Mysqltcs;
 use it\thecsea\mysqltcs\MysqltcsException;
 use it\thecsea\mysqltcs\MysqltcsOperations;
@@ -80,10 +81,9 @@ class NotificationManager
 
         $tables = $this->dbOperations->showTables();
 
-        if(!(self::checkPresence($tables,$notificationsTable) && self::checkPresence($tables,$notificationTypeTable)
-            && self::checkPresence($tables,$typesTable))){
-            throw new DatabaseException('One of the specified db tables names does not match any existing db table');
-        }
+        self::matchTable($tables,$notificationsTable);
+        self::matchTable($tables,$notificationTypeTable);
+        self::matchTable($tables,$typesTable);
         $this->notificationsTable = $notificationsTable;
         $this->notificationTypeTable = $notificationTypeTable;
         $this->typesTable = $typesTable;
@@ -139,9 +139,7 @@ class NotificationManager
     public function setNotificationsTable($notificationsTable)
     {
         $notificationsTable = $this->dbConnection->getEscapedString($notificationsTable);
-        if(!self::checkPresence($this->dbOperations->showTables(),$notificationsTable)){
-            throw new DatabaseException('The specified db table name does not match any existing db table');
-        }
+        self::matchTable($this->dbOperations->showTables(),$notificationsTable);
         $this->notificationsTable = $notificationsTable;
         $this->dbOperations->setDefaultFrom($notificationsTable);
     }
@@ -161,9 +159,7 @@ class NotificationManager
     public function setNotificationTypeTable($notificationTypeTable)
     {
         $notificationTypeTable = $this->dbConnection->getEscapedString($notificationTypeTable);
-        if(!self::checkPresence($this->dbOperations->showTables(),$notificationTypeTable)){
-            throw new DatabaseException('The specified db table name does not match any existing db table');
-        }
+        self::matchTable($this->dbOperations->showTables(),$notificationTypeTable);
         $this->notificationTypeTable = $notificationTypeTable;
     }
 
@@ -176,15 +172,13 @@ class NotificationManager
     }
 
     /**
-     * @param string $typesTable
-     * @throws DatabaseException If the specified table name does not match any existing db table
+     * @param $typesTable
+     * @throws NotContainedValueException
      */
     public function setTypesTable($typesTable)
     {
         $typesTable = $this->dbConnection->getEscapedString($typesTable);
-        if(!self::checkPresence($this->dbOperations->showTables(),$typesTable)){
-            throw new DatabaseException('The specified db table name does not match any existing db table');
-        }
+        self::matchTable($this->dbOperations->showTables(),$typesTable);
         $this->typesTable = $typesTable;
     }
 
@@ -249,13 +243,32 @@ class NotificationManager
     }
 
     /**
-     * Checks if a given value is contained in a given array
+     * Checks if a given value is contained in a given array, if not an exception is thrown
      *
-     * @param array $array The array that contains or not contains the given value
-     * @param mixed $value The value that is tested to be contained in the given array
-     * @return bool The result of the test
+     * @param array $array The array in which a the given value is contained or not
+     * @param mixed $value The value that is tested to be contained or not in the given array
+     * @throws NotContainedValueException If the given value is not contained in the given array
      */
     public static function checkPresence($array,$value){
-        return in_array($array,$value);
+        if(!in_array($array,$value)){
+            throw new NotContainedValueException('The specified value is not contained in the specified array');
+        }
+
+    }
+
+    /**
+     * Checks if a given db table name matches an existing db table
+     *
+     * @param array $tables The array that contains all the tables names of a db
+     * @param string $table A table name that is tested to be contained or not in the given list of db tables names
+     * @throws DatabaseException If the specified table name is not contained in the specified list of db table names
+     */
+    public static function matchTable($tables, $table){
+        try{
+            self::checkPresence($tables, $table);
+        }
+        catch(NotContainedValueException $e){
+            throw new DatabaseException('The specified db table name does not match any existing table ');
+        }
     }
 }
