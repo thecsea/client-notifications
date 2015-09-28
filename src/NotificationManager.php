@@ -93,6 +93,13 @@ class NotificationManager
         if(!$flag){
             throw new DatabaseException('One of the specified db tables names does not match any existing db table');
         }
+        //TODO the previous check is not correct in fact the correct check is $flag := true if and only if all tables exist,
+        //TODO while this check is $flag := true if a table exists.
+        //TODO to avoid cyclomatic complexity and duplications we have to split the checks into a simple methods like here
+        //TODO https://github.com/thecsea/users-management/blob/master/src/UsersManagement.php#L83
+        //TODO to see the cyclomatic complexity take a look to https://scrutinizer-ci.com/g/thecsea/client-notifications/code-structure
+        //TODO we have some methods that are duplicated
+        //TODO https://scrutinizer-ci.com/g/thecsea/client-notifications/code-structure/master/operation/it%5Cthecsea%5Cclient_notifications%5CNotificationManager%3A%3AsetNotificationsTable
         $this->notificationsTable = $notificationsTable;
         $this->notificationTypeTable = $notificationTypeTable;
         $this->typesTable = $typesTable;
