@@ -71,35 +71,19 @@ class NotificationManager
      */
     public function __construct(Mysqltcs $connection, $notificationsTable, $notificationTypeTable, $typesTable)
     {
-        $flag = false;
         $this->dbConnection = $connection;
         $notificationsTable = $connection->getEscapedString($notificationsTable);
         $notificationTypeTable = $connection->getEscapedString($notificationTypeTable);
-        $this->notificationTypeTable = $notificationTypeTable;
         $typesTable = $connection->getEscapedString($typesTable);
         //this means that $notificationsTable is the default table, if from parameter is not set
         $this->dbOperations = new MysqltcsOperations($this->dbConnection, $notificationsTable);
-        foreach($this->dbOperations->showTables() as $table){
-            if($table == $notificationsTable){
-                $flag = true;
-            }
-            else if($table == $notificationTypeTable){
-                $flag = true;
-            }
-            else if($table == $typesTable){
-                $flag = true;
-            }
-        }
-        if(!$flag){
+
+        $tables = $this->dbOperations->showTables();
+
+        if(!(self::checkPresence($tables,$notificationsTable) && self::checkPresence($tables,$notificationTypeTable)
+            && self::checkPresence($tables,$typesTable))){
             throw new DatabaseException('One of the specified db tables names does not match any existing db table');
         }
-        //TODO the previous check is not correct in fact the correct check is $flag := true if and only if all tables exist,
-        //TODO while this check is $flag := true if a table exists.
-        //TODO to avoid cyclomatic complexity and duplications we have to split the checks into a simple methods like here
-        //TODO https://github.com/thecsea/users-management/blob/master/src/UsersManagement.php#L83
-        //TODO to see the cyclomatic complexity take a look to https://scrutinizer-ci.com/g/thecsea/client-notifications/code-structure
-        //TODO we have some methods that are duplicated
-        //TODO https://scrutinizer-ci.com/g/thecsea/client-notifications/code-structure/master/operation/it%5Cthecsea%5Cclient_notifications%5CNotificationManager%3A%3AsetNotificationsTable
         $this->notificationsTable = $notificationsTable;
         $this->notificationTypeTable = $notificationTypeTable;
         $this->typesTable = $typesTable;
@@ -154,14 +138,8 @@ class NotificationManager
      */
     public function setNotificationsTable($notificationsTable)
     {
-        $flag = false;
         $notificationsTable = $this->dbConnection->getEscapedString($notificationsTable);
-        foreach($this->dbOperations->showTables() as $table){
-            if($table == $notificationsTable){
-                $flag = true;
-            }
-        }
-        if(!$flag){
+        if(!self::checkPresence($this->dbOperations->showTables(),$notificationsTable)){
             throw new DatabaseException('The specified db table name does not match any existing db table');
         }
         $this->notificationsTable = $notificationsTable;
@@ -182,14 +160,8 @@ class NotificationManager
      */
     public function setNotificationTypeTable($notificationTypeTable)
     {
-        $flag = false;
         $notificationTypeTable = $this->dbConnection->getEscapedString($notificationTypeTable);
-        foreach($this->dbOperations->showTables() as $table){
-            if($table == $notificationTypeTable){
-                $flag = true;
-            }
-        }
-        if(!$flag){
+        if(!self::checkPresence($this->dbOperations->showTables(),$notificationTypeTable)){
             throw new DatabaseException('The specified db table name does not match any existing db table');
         }
         $this->notificationTypeTable = $notificationTypeTable;
@@ -209,14 +181,8 @@ class NotificationManager
      */
     public function setTypesTable($typesTable)
     {
-        $flag = false;
         $typesTable = $this->dbConnection->getEscapedString($typesTable);
-        foreach($this->dbOperations->showTables() as $table){
-            if($table == $typesTable){
-                $flag = true;
-            }
-        }
-        if(!$flag){
+        if(!self::checkPresence($this->dbOperations->showTables(),$typesTable)){
             throw new DatabaseException('The specified db table name does not match any existing db table');
         }
         $this->typesTable = $typesTable;
@@ -232,9 +198,9 @@ class NotificationManager
      */
     public function store(ClientNotification $notification){
         //String conversion and escaping in order to perform a correct and safe sql query
-        $user_id = $this->getEscapedString((string) $notification->getUserId());
-        $message = $this->getEscapedString((string) $notification->getMessage());
-        $timestamp = $this->getEscapedString((string) $notification->getTimestamp());
+        $user_id = $this->dbConnection->getEscapedString((string) $notification->getUserId());
+        $message = $this->dbConnection->getEscapedString((string) $notification->getMessage());
+        $timestamp = $this->dbConnection->getEscapedString((string) $notification->getTimestamp());
         try{
             $this->dbOperations->insert(array('user_id','message','date'),
                 array($user_id,$message,$timestamp));
@@ -283,11 +249,13 @@ class NotificationManager
     }
 
     /**
-     * Escapes a given string from special characters
-     * @param string $string A string to be escaped
-     * @return string the escaped string
+     * Checks if a given value is contained in a given array
+     *
+     * @param array $array The array that contains or not contains the given value
+     * @param mixed $value The value that is tested to be contained in the given array
+     * @return bool The result of the test
      */
-    private function getEscapedString($string){
-        return $this->dbOperations->getEscapedString($string);
+    public static function checkPresence($array,$value){
+        return in_array($array,$value);
     }
 }
