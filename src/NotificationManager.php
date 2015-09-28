@@ -59,28 +59,43 @@ class NotificationManager
     private $typesTable;
 
     /**
+     * /**
      * Constructs a notification manager that manages the sending and storing of notifications.
      * This manager is constructed from pieces of information relative to the db used to store the notifications
      *
      * @param Mysqltcs $connection The mysqltcs connection, it can be a connection used in other classes
-     * @param string $notificationsTable
-     * @param string $notificationTypeTable
-     * @param string $typesTable
+     * @param string $notificationsTable The name of the the table in which notifications are stored
+     * @param string $notificationTypeTable The name of the table that maps notifications with their sending mediums
+     * @param string $typesTable The name of the table that maps the code of a sending medium with its name
+     * @throws DatabaseException If one of the specified db tables names does not match any existing db table
      */
     public function __construct(Mysqltcs $connection, $notificationsTable, $notificationTypeTable, $typesTable)
     {
+        $flag = false;
         $this->dbConnection = $connection;
         $notificationsTable = $connection->getEscapedString($notificationsTable);
-        $this->notificationsTable = $notificationsTable;
         $notificationTypeTable = $connection->getEscapedString($notificationTypeTable);
         $this->notificationTypeTable = $notificationTypeTable;
         $typesTable = $connection->getEscapedString($typesTable);
-        $this->typesTable = $typesTable;
-
         //this means that $notificationsTable is the default table, if from parameter is not set
         $this->dbOperations = new MysqltcsOperations($this->dbConnection, $notificationsTable);
-
-        //TODO check here and in setter if tables exist
+        foreach($this->dbOperations->showTables() as $table){
+            if($table == $notificationsTable){
+                $flag = true;
+            }
+            else if($table == $notificationTypeTable){
+                $flag = true;
+            }
+            else if($table == $typesTable){
+                $flag = true;
+            }
+        }
+        if(!$flag){
+            throw new DatabaseException('One of the specified db tables names does not match any existing db table');
+        }
+        $this->notificationsTable = $notificationsTable;
+        $this->notificationTypeTable = $notificationTypeTable;
+        $this->typesTable = $typesTable;
     }
 
 
@@ -128,10 +143,20 @@ class NotificationManager
 
     /**
      * @param string $notificationsTable
+     * @throws DatabaseException If the specified table name does not match any existing db table
      */
     public function setNotificationsTable($notificationsTable)
     {
+        $flag = false;
         $notificationsTable = $this->dbConnection->getEscapedString($notificationsTable);
+        foreach($this->dbOperations->showTables() as $table){
+            if($table == $notificationsTable){
+                $flag = true;
+            }
+        }
+        if(!$flag){
+            throw new DatabaseException('The specified db table name does not match any existing db table');
+        }
         $this->notificationsTable = $notificationsTable;
         $this->dbOperations->setDefaultFrom($notificationsTable);
     }
@@ -146,10 +171,20 @@ class NotificationManager
 
     /**
      * @param string $notificationTypeTable
+     * @throws DatabaseException If the specified table name does not match any existing db table
      */
     public function setNotificationTypeTable($notificationTypeTable)
     {
+        $flag = false;
         $notificationTypeTable = $this->dbConnection->getEscapedString($notificationTypeTable);
+        foreach($this->dbOperations->showTables() as $table){
+            if($table == $notificationTypeTable){
+                $flag = true;
+            }
+        }
+        if(!$flag){
+            throw new DatabaseException('The specified db table name does not match any existing db table');
+        }
         $this->notificationTypeTable = $notificationTypeTable;
     }
 
@@ -163,10 +198,20 @@ class NotificationManager
 
     /**
      * @param string $typesTable
+     * @throws DatabaseException If the specified table name does not match any existing db table
      */
     public function setTypesTable($typesTable)
     {
+        $flag = false;
         $typesTable = $this->dbConnection->getEscapedString($typesTable);
+        foreach($this->dbOperations->showTables() as $table){
+            if($table == $typesTable){
+                $flag = true;
+            }
+        }
+        if(!$flag){
+            throw new DatabaseException('The specified db table name does not match any existing db table');
+        }
         $this->typesTable = $typesTable;
     }
 
@@ -204,14 +249,14 @@ class NotificationManager
      */
     public function send(ClientNotification $notification){
         /** @var NotificationMedium[] $mediums */
-        $mediums = $notification->getNotificationVehicles();
+        $mediums = $notification->getNotificationMediums();
         //Checks if $vehicles is an object of the type NotificationVehicle
         if(!is_array($mediums) && $mediums instanceof NotificationMedium){
             /** @var NotificationMedium $mediums */
             $mediums->sendProcedure($notification);
             $this->store($notification);
         }
-        else{
+        else if(is_array($mediums)){
             foreach($mediums as $medium){
                 //Checks if $vehicles does not contain array but objects of the type NotificationVehicle
                 if(!is_array($medium) && ($medium instanceof NotificationMedium)){
@@ -224,8 +269,10 @@ class NotificationManager
 
             }
         }
+        else{
+            throw new NonValidArgumentException('No valid medium for the notification has been defined');
+        }
 
-        //TODO case medium is not array nor instanceof NotificationMedium
     }
 
     /**

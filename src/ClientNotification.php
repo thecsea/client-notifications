@@ -45,7 +45,7 @@ class ClientNotification
     /**
      * @var NotificationMedium[]
      */
-    private $notificationVehicles;
+    private $notificationMediums;
 
 
     /**
@@ -64,7 +64,7 @@ class ClientNotification
 
     /**
      * Constructs a notification from its encapsulated message, the user it refers to and from the
-     * vehicles to be used to send it
+     * mediums to be used to send it
      *
      * @param string $message The message encapsulated in the notification
      * @param int $userId The id of the user the notification refers to
@@ -107,19 +107,19 @@ class ClientNotification
     }
 
     /**
-     * @param NotificationMedium[] $notificationVehicles
+     * @param NotificationMedium[] $notificationMediums
      */
-    public function setNotificationVehicles($notificationVehicles)
+    public function setNotificationMediums($notificationMediums)
     {
-        $this->notificationVehicles = $notificationVehicles;
+        $this->notificationMediums = $notificationMediums;
     }
 
     /**
      * @return NotificationMedium[]
      */
-    public function getNotificationVehicles()
+    public function getNotificationMediums()
     {
-        return $this->notificationVehicles;
+        return $this->notificationMediums;
     }
     /**
      * @return string

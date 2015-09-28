@@ -170,7 +170,7 @@ class MailMedium extends NotificationMedium
 
     /**
      *
-     * @param \it\thecsea\client_notifications\ClientNotification $notification The notification to sent via mail
+     * @param \it\thecsea\client_notifications\ClientNotification $notification The notification to be sent via mail
      * @throws FailedMailNotificationSendingException If the sending of the mail has failed
      * @throws \Exception
      * @throws \phpmailerException If an error occured in the sending of the mail
