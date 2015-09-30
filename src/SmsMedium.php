@@ -29,6 +29,10 @@ namespace it\thecsea\client_notifications;
 class SmsMedium extends NotificationMedium
 {
     /**
+     * @var int
+     */
+    private $code;
+    /**
      * @var string
      */
     private $phoneNumber;
@@ -46,5 +50,6 @@ class SmsMedium extends NotificationMedium
     public function sendProcedure(ClientNotification $notification){
         //
     }
+
 
 }

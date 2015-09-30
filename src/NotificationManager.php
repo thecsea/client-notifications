@@ -81,9 +81,9 @@ class NotificationManager
 
         $tables = $this->dbOperations->showTables();
 
-        self::matchTable($tables,$notificationsTable);
-        self::matchTable($tables,$notificationTypeTable);
-        self::matchTable($tables,$typesTable);
+        self::matchTable($notificationsTable,$tables);
+        self::matchTable($notificationTypeTable,$tables);
+        self::matchTable($typesTable,$tables);
         $this->notificationsTable = $notificationsTable;
         $this->notificationTypeTable = $notificationTypeTable;
         $this->typesTable = $typesTable;
@@ -192,16 +192,15 @@ class NotificationManager
      */
     public function store(ClientNotification $notification){
         //String conversion and escaping in order to perform a correct and safe sql query
-        $user_id = $this->dbConnection->getEscapedString((string) $notification->getUserId());
+        $user_id = $notification->getUserId();
         $message = $this->dbConnection->getEscapedString((string) $notification->getMessage());
-        $timestamp = $this->dbConnection->getEscapedString((string) $notification->getTimestamp());
         try{
-            $this->dbOperations->insert(array('user_id','message','date'),
-                array($user_id,$message,$timestamp));
+            $this->dbOperations->insert('user_id,message',
+                $user_id.",'".$message."'");
         }
         catch(MysqltcsException $e)
         {
-            throw new DatabaseException('An error occurred in the insertion of the data in the database');
+            throw new DatabaseException('An error occurred in the insertion of the data in the database',$e);
         }
 
     }
@@ -241,7 +240,6 @@ class NotificationManager
         }
 
     }
-
     /**
      * Checks if a given value is contained in a given array, if not an exception is thrown
      *
@@ -249,8 +247,8 @@ class NotificationManager
      * @param mixed $value The value that is tested to be contained or not in the given array
      * @throws NotContainedValueException If the given value is not contained in the given array
      */
-    public static function checkPresence($array,$value){
-        if(!in_array($array,$value)){
+    public static function checkPresence($value,$array){
+        if(!in_array($value,$array)){
             throw new NotContainedValueException('The specified value is not contained in the specified array');
         }
 
@@ -263,9 +261,9 @@ class NotificationManager
      * @param string $table A table name that is tested to be contained or not in the given list of db tables names
      * @throws DatabaseException If the specified table name is not contained in the specified list of db table names
      */
-    public static function matchTable($tables, $table){
+    public static function matchTable($table, $tables){
         try{
-            self::checkPresence($tables, $table);
+            self::checkPresence($table,$tables);
         }
         catch(NotContainedValueException $e){
             throw new DatabaseException('The specified db table name does not match any existing table ');

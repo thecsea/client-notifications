@@ -35,5 +35,5 @@ abstract class NotificationMedium
      *
      * @param ClientNotification $notification A notification to be sent using the medium this class refers to
      */
-     abstract public function sendProcedure(ClientNotification $notification);
+    abstract public function sendProcedure(ClientNotification $notification);
 }
