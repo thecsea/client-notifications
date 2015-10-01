@@ -197,6 +197,8 @@ class NotificationManager
         try{
             $this->dbOperations->insert('user_id,message',
                 $user_id.",'".$message."'");
+            /*$this->dbOperations->insert('notification_id,type_id',
+                $this->dbOperations->getLastId().",1",'notification_type');*/
         }
         catch(MysqltcsException $e)
         {

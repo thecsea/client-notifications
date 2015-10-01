@@ -75,7 +75,6 @@ class NotificationManagerTest extends \PHPUnit_Framework_TestCase
         $mediums = new SmsMedium(1111);
         $notification = new ClientNotification('_',1,$mediums);
         $this->instance->store($notification);
-        echo "sdasd";
         $this->assertEquals($ops->getValue('date','id = '.$ops->getLastId()),date('Y-m-d H:i:s',$notification->getTimestamp()));
 
     }
