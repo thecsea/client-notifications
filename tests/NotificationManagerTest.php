@@ -27,10 +27,19 @@ require_once(__DIR__ . "/../vendor/autoload.php");
 class NotificationManagerTest extends \PHPUnit_Framework_TestCase
 {
 
+    /**
+     * @var NotificationManager
+     */
     private $instance;
 
+    /**
+     * @var Mysqltcs
+     */
     private $dbCon;
 
+    /**
+     * @var array
+     */
     private $dbInfos;
 
 
@@ -74,8 +83,9 @@ class NotificationManagerTest extends \PHPUnit_Framework_TestCase
         $ops = $this->instance->getDbOperations();
         $mediums = new SmsMedium(1111);
         $notification = new ClientNotification('_',1,$mediums);
-        $this->instance->store($notification);
-        $this->assertEquals($ops->getValue('date','id = '.$ops->getLastId()),date('Y-m-d H:i:s',$notification->getTimestamp()));
+        $id = $this->instance->store($notification);
+        $ops->getValue('date','id = '.$id);
+        $this->assertEquals($ops->getValue('date','id = '.$id),date('Y-m-d H:i:s',$notification->getTimestamp()));
 
     }
 

@@ -188,6 +188,7 @@ class NotificationManager
      * Stores a given notification in the provided db
      *
      * @param ClientNotification $notification A notification to be store in the specified db
+     * @return int the id of notification inserted
      * @throws DatabaseException If an error occured in the storing of the notification in the db
      */
     public function store(ClientNotification $notification){
@@ -197,12 +198,14 @@ class NotificationManager
         try{
             $this->dbOperations->insert('user_id,message',
                 $user_id.",'".$message."'");
-            /*$this->dbOperations->insert('notification_id,type_id',
-                $this->dbOperations->getLastId().",1",'notification_type');*/
+            $id = $this->dbOperations->getLastId();
+            $this->dbOperations->insert('notification_id,type_id',
+               $id .",1",'notification_type');
+            return $id;
         }
         catch(MysqltcsException $e)
         {
-            throw new DatabaseException('An error occurred in the insertion of the data in the database',$e);
+            throw new DatabaseException('An error occurred in the insertion of the data in the database',0,$e);
         }
 
     }

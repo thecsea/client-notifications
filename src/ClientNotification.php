@@ -43,7 +43,7 @@ class ClientNotification
      */
     private $userId;
     /**
-     * @var NotificationMedium[]
+     * @var NotificationMedium[]\NotificationMedium
      */
     private $notificationMediums;
 
@@ -68,7 +68,7 @@ class ClientNotification
      *
      * @param string $message The message encapsulated in the notification
      * @param int $userId The id of the user the notification refers to
-     * @param NotificationMedium[] $notificationVehicles An array of NotificationVehicle objects
+     * @param NotificationMedium[]|NotificationMedium $notificationVehicles An array of NotificationMedium objects or one NotificationMedium
      * @throws NonValidArgumentException If the provided user id is a negative or a zero value integer
      */
     public function __construct($message, $userId, $notificationVehicles)
