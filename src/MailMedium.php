@@ -193,7 +193,4 @@ class MailMedium extends NotificationMedium
             throw new NonValidArgumentException('Tcp/Udp ports are in the range 0 - 65536');
         }
     }
-    public function getCode(){
-        //
-    }
 }

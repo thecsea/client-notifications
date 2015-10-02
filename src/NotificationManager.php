@@ -205,17 +205,18 @@ class NotificationManager
             if(is_array($mediums)){
                 foreach($mediums as $medium){
                     $this->dbOperations->insert('notification_id,type_id',
-                        $recordId .", '".get_class($medium)."'",'notification_type');
+                        $recordId .", '".get_class($medium)."'",$this->notificationTypeTable);
                 }
             }
             else{
                 $className = get_class($mediums);
-                $queryResult = $this->dbOperations->getValue('id','name = '."'".$className."'",'types');
+                $queryResult = $this->dbOperations->getValue('id','name = '."'".$className."'",$this->typesTable);
                 if(is_null($queryResult)){
-                    $this->dbOperations->insert('name', "'".$className."'",'types');
+                    $this->dbOperations->insert('name', "'".$className."'",$this->typesTable);
+                    $queryResult = $this->dbOperations->getLastId();
                 }
                 $this->dbOperations->insert('notification_id,type_id',
-                    $recordId .", "."'".$queryResult."'",'notification_type');
+                    $recordId .", ".$queryResult,$this->notificationTypeTable);
             }
 
             return $recordId;
