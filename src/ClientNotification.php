@@ -68,10 +68,10 @@ class ClientNotification
      *
      * @param string $message The message encapsulated in the notification
      * @param int $userId The id of the user the notification refers to
-     * @param NotificationMedium[]|NotificationMedium $notificationVehicles An array of NotificationMedium objects or one NotificationMedium
+     * @param NotificationMedium[]|NotificationMedium $notificationMediums An array of NotificationMedium objects or one NotificationMedium
      * @throws NonValidArgumentException If the provided user id is a negative or a zero value integer
      */
-    public function __construct($message, $userId, $notificationVehicles)
+    public function __construct($message, $userId, $notificationMediums)
     {
         if(!self::checkUserIdValidity($userId)){
             throw new NonValidArgumentException('The given user id is not valid');
@@ -79,7 +79,7 @@ class ClientNotification
         $this->message = $message;
         $this->userId = $userId;
         $this->timestamp = time();
-        $this->notificationVehicles = $notificationVehicles;
+        $this->notificationMediums = $notificationMediums;
     }
 
     /**
@@ -115,7 +115,7 @@ class ClientNotification
     }
 
     /**
-     * @return NotificationMedium[]
+     * @return  NotificationMedium | NotificationMedium[]
      */
     public function getNotificationMediums()
     {

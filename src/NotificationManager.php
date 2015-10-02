@@ -195,13 +195,30 @@ class NotificationManager
         //String conversion and escaping in order to perform a correct and safe sql query
         $user_id = $notification->getUserId();
         $message = $this->dbConnection->getEscapedString((string) $notification->getMessage());
+        $mediums = $notification->getNotificationMediums();
         try{
+            //Notification insert
             $this->dbOperations->insert('user_id,message',
                 $user_id.",'".$message."'");
-            $id = $this->dbOperations->getLastId();
-            $this->dbOperations->insert('notification_id,type_id',
-               $id .",1",'notification_type');
-            return $id;
+            //Id of the record just inserted
+            $recordId = $this->dbOperations->getLastId();
+            if(is_array($mediums)){
+                foreach($mediums as $medium){
+                    $this->dbOperations->insert('notification_id,type_id',
+                        $recordId .", '".get_class($medium)."'",'notification_type');
+                }
+            }
+            else{
+                $className = get_class($mediums);
+                $queryResult = $this->dbOperations->getValue('id','name = '."'".$className."'",'types');
+                if(is_null($queryResult)){
+                    $this->dbOperations->insert('name', "'".$className."'",'types');
+                }
+                $this->dbOperations->insert('notification_id,type_id',
+                    $recordId .", "."'".$queryResult."'",'notification_type');
+            }
+
+            return $recordId;
         }
         catch(MysqltcsException $e)
         {

@@ -84,9 +84,11 @@ class NotificationManagerTest extends \PHPUnit_Framework_TestCase
         $mediums = new SmsMedium(1111);
         $notification = new ClientNotification('_',1,$mediums);
         $id = $this->instance->store($notification);
-        $ops->getValue('date','id = '.$id);
-        $this->assertEquals($ops->getValue('date','id = '.$id),date('Y-m-d H:i:s',$notification->getTimestamp()));
-
+        $this->assertEquals($ops->getValue('message','id = '.$id),$notification->getMessage());
+        $this->assertEquals($ops->getValue('user_id','id = '.$id),$notification->getUserId());
+        $value = $ops->getValue('id','name = '."'".get_class($mediums)."'",'types');
+        $this->assertEquals($ops->getValue('type_id','notification_id = '.$id,'notification_type'),$value);
+        $ops->deleteRows('1');
     }
 
 }

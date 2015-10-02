@@ -44,8 +44,8 @@ class SmsMedium extends NotificationMedium
     }
 
     public function sendProcedure(ClientNotification $notification){
-        //
     }
+
 
 
 }
