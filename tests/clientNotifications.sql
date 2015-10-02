@@ -56,7 +56,8 @@ ADD KEY `type_id` (`type_id`),
 ADD KEY `notification_id_2` (`notification_id`);
 
 ALTER TABLE `types`
-ADD PRIMARY KEY (`id`);
+ADD PRIMARY KEY (`id`),
+ADD UNIQUE KEY `name` (`name`);
 
 ALTER TABLE `notifications`
 MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
