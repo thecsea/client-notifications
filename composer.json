@@ -19,7 +19,7 @@
   ],
   "require": {
     "php": ">=5.3.0",
-    "thecsea/mysqltcs": "3.0.*",
+    "thecsea/mysqltcs": "3.*",
     "phpmailer/phpmailer": "~5.2"
   },
   "require-dev": {
