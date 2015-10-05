@@ -204,6 +204,7 @@ class NotificationManager
             $recordId = $this->dbOperations->getLastId();
             if(is_array($mediums)){
                 foreach($mediums as $medium){
+                    //TODO this code doesn't work, use the code in the 'else' branch. Since the code will become the same it's a better choice to insert it into a method
                     $this->dbOperations->insert('notification_id,type_id',
                         $recordId .", '".get_class($medium)."'",$this->notificationTypeTable);
                 }
