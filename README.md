@@ -9,5 +9,6 @@ Build status: [![Build Status](https://travis-ci.org/thecsea/client-notification
 # Credits
 * [Php Mailer](https://github.com/PHPMailer/PHPMailer): php library to send email
 * [Mysqltcs](https://github.com/thecsea/mysqltcs): php library to connect to a mysql database
+* [Nexmo](http://nexmo.com/): SMS gateway
 
 # By [thecsea.it](http://www.thecsea.it)
