@@ -81,7 +81,7 @@ class NotificationManagerTest extends \PHPUnit_Framework_TestCase
     }
     public function testStoreMethod(){
         $ops = $this->instance->getDbOperations();
-        $mediums = new SmsMedium(1111);
+        $mediums = new NexmoSmsMedium(1111, "", "");
         $notification = new ClientNotification('_',1,$mediums);
         $id = $this->instance->store($notification);
         $this->assertEquals($ops->getValue('message','id = '.$id),$notification->getMessage());

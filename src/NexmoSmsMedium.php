@@ -26,7 +26,7 @@ namespace it\thecsea\client_notifications;
  * @copyright 2015 Giorgio Pea
  * @version 1.0.0
  */
-class SmsMedium extends NotificationMedium
+class NexmoSmsMedium extends NotificationMedium
 {
     /**
      * @var string
@@ -34,14 +34,78 @@ class SmsMedium extends NotificationMedium
     private $phoneNumber;
 
     /**
+     * @var String
+     */
+    private $apiKey;
+
+    /**
+     * @var String
+     */
+    private $apiSecret;
+
+    /**
      * Constructs a group of pieces of information and procedures to send a notification via sms. This group is
      * constructed from a phone number.
      * @param string $phoneNumber The phone number to be used to send a notification via sms
+     * @param String $apiKey Nexmo ApiKey
+     * @param String $apiSecret Nexmo ApiSecret
      */
-    public function __construct($phoneNumber)
+    public function __construct($phoneNumber, $apiKey, $apiSecret)
+    {
+        $this->phoneNumber = $phoneNumber;
+        $this->apiKey = $apiKey;
+        $this->apiSecret = $apiSecret;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPhoneNumber()
+    {
+        return $this->phoneNumber;
+    }
+
+    /**
+     * @param string $phoneNumber
+     */
+    public function setPhoneNumber($phoneNumber)
     {
         $this->phoneNumber = $phoneNumber;
     }
+
+    /**
+     * @return String
+     */
+    public function getApiKey()
+    {
+        return $this->apiKey;
+    }
+
+    /**
+     * @param String $apiKey
+     */
+    public function setApiKey($apiKey)
+    {
+        $this->apiKey = $apiKey;
+    }
+
+    /**
+     * @return String
+     */
+    public function getApiSecret()
+    {
+        return $this->apiSecret;
+    }
+
+    /**
+     * @param String $apiSecret
+     */
+    public function setApiSecret($apiSecret)
+    {
+        $this->apiSecret = $apiSecret;
+    }
+
+
 
     public function sendProcedure(ClientNotification $notification){
     }
