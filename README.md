@@ -12,4 +12,7 @@ Build status: [![Build Status](https://travis-ci.org/thecsea/client-notification
 * [Nexmo](http://nexmo.com/): SMS gateway
 * [Microsoft azure](https://azure.microsoft.com): Push notify gateway
 
+# Other
+We suggest to use an email external server to avoid that your mail server is marked as spammer
+
 # By [thecsea.it](http://www.thecsea.it)
